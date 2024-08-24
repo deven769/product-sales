@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+sqlalchemy
+psycopg2-binary
+pytest
+pytest-mock
+alembic
+python-multipart
+email-validator
+scikit-learn
+pandas
+python-dotenv
