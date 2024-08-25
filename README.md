@@ -17,11 +17,11 @@ This project is a FastAPI web server that handles product sales data for a store
 5. Set database: 
    - Change line 63 in alembic.ini with your database credentials
    - Update .env for DATABASE_URL with your database credentials
-   - After database setup run migration command to create table in databse
+   - After database setup run migration command to create table in database
    ```alembic upgrade head
    ```
 
-6. Run server : navigate to project dir (cd sales)
+6. Run server : navigate to project dir (cd product-sales)
 ```bash
    uvicorn app.main:app --reload
 ```
