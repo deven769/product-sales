@@ -24,6 +24,12 @@ This project is a FastAPI web server that handles product sales data for a store
 ```
 7. Access api at: http://127.0.0.1:8000/docs
 
+8. For running test cases
+   ```bash
+   pytest
+
+   ```
+
 ## Options
 
 8. Command for database migration and migrate
