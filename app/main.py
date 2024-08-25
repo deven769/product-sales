@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from app import models, database
 from app.crud import ProductManager
 import shutil
+from sqlalchemy.exc import IntegrityError
 import os
 import logging
 
@@ -39,6 +40,12 @@ def load_data_endpoint(file: UploadFile = File(...), db: Session = Depends(datab
         
         os.remove(file_location)
         return {"status": "success", "message": "Data loaded successfully"}
+
+    except IntegrityError as e:
+        logger.error(f"Database integrity error: {str(e)}")
+        if 'duplicate key value' in str(e.orig):
+            raise HTTPException(status_code=400, detail="Duplicate key error: The product ID already exists in the database.")
+        raise HTTPException(status_code=500, detail="Database error occurred.")
     
     except Exception as e:
         logger.error(f"Unexpected error: {str(e)}")
