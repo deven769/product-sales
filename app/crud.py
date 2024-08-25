@@ -42,10 +42,18 @@ class ProductManager:
                 self.db.commit()
                 self.db.refresh(family)
             
-            # Create the product
+            # Check if the product already exists
+            product_id = row.get('Product ID')
+            existing_product = self.db.query(models.Product).filter(models.Product.id == product_id).first()
+            
+            if existing_product:
+                logger.info(f"Product with ID {product_id} already exists, skipping.")
+                continue  # Skip to the next product if it already exists
+
+            # Create the product if it doesn't exist
             product = models.Product(
                 name=row.get('Product Name'),
-                id=row.get('Product ID'),
+                id=product_id,
                 price=row.get('Price'),
                 family_id=family.id
             )
