@@ -15,7 +15,7 @@ This project is a FastAPI web server that handles product sales data for a store
    pip install -r requirements.txt 
    ```
 5. Set database: 
-   - Chnage line 63 in alembic.ini with your database credentials
+   - Change line 63 in alembic.ini with your database credentials
    - Update .env for DATABASE_URL with your database credentials
 
 6. Run server : navigate to project dir (cd sales)
@@ -38,3 +38,5 @@ This project is a FastAPI web server that handles product sales data for a store
    ```bash 
    python -m app.sales_prediction
    ```
+
+Note: Sales prediction load data from DATABASE

@@ -3,6 +3,8 @@ from sqlalchemy.orm import relationship
 from app.database import Base
 
 class Family(Base):
+    """Represents a product family with a name and associated products."""
+
     __tablename__ = 'families'
 
     id = Column(Integer, primary_key=True, index=True)
@@ -13,6 +15,8 @@ class Family(Base):
 
 
 class Product(Base):
+    """Defines a product with name, price, associated family, and sales records."""
+
     __tablename__ = 'products'
 
     id = Column(Integer, primary_key=True, index=True)
@@ -26,6 +30,8 @@ class Product(Base):
 
 
 class Sales(Base):
+    """Records individual sales transactions for products, including date and quantity."""
+
     __tablename__ = 'sales'
 
     id = Column(Integer, primary_key=True, index=True)

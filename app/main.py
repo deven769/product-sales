@@ -27,8 +27,21 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
-@router.post("/load-data/", tags=["Data Loading"], summary="Load data from a file")
-def load_data_endpoint(file: UploadFile = File(...), db: Session = Depends(database.get_db)):
+@router.post("/load-data/", tags=["Data Loading"])
+async def load_data_endpoint(file: UploadFile = File(...), db: Session = Depends(database.get_db)):
+    """
+    Load data from a file into the database.
+
+    Args:
+        file (UploadFile): The file containing the data to be loaded.
+        db (Session): The database session.
+
+    Returns:
+        dict: A message indicating the success of the operation.
+
+    Raises:
+        HTTPException: If there's a database integrity error or any unexpected error occurs.
+    """
     file_location = f"/tmp/{file.filename}"
     
     try:
@@ -51,24 +64,65 @@ def load_data_endpoint(file: UploadFile = File(...), db: Session = Depends(datab
         logger.error(f"Unexpected error: {str(e)}")
         raise HTTPException(status_code=500, detail="An unexpected error occurred")
 
-@router.get("/product/{product_id}", tags=["Products"], summary="Get a product by ID")
-def get_product(product_id: int, db: Session = Depends(database.get_db)):
+@router.get("/product/{product_id}", tags=["Products"])
+async def get_product(product_id: int, db: Session = Depends(database.get_db)):
+    """
+    Retrieve a product by its ID.
+
+    Args:
+        product_id (int): The ID of the product to retrieve.
+        db (Session): The database session.
+
+    Returns:
+        dict: The product details.
+
+    Raises:
+        HTTPException: If the product is not found.
+    """
     product_service = ProductManager(db)
     product = product_service.get_product(product_id)
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
     return {"status": "success", "data": product}
 
-@router.put("/product/{product_id}", tags=["Products"], summary="Update a product's price")
-def update_product(product_id: int, price: float, db: Session = Depends(database.get_db)):
+@router.put("/product/{product_id}", tags=["Products"])
+async def update_product(product_id: int, price: float, db: Session = Depends(database.get_db)):
+    """
+    Update a product's price.
+
+    Args:
+        product_id (int): The ID of the product to update.
+        price (float): The new price for the product.
+        db (Session): The database session.
+
+    Returns:
+        dict: A message indicating the success of the operation.
+
+    Raises:
+        HTTPException: If the product is not found.
+    """
     product_service = ProductManager(db)
     product = product_service.update_product(product_id, price)
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
     return {"status": "success", "message": "Product updated successfully"}
 
-@router.post("/family/{family_id}/product/", tags=["Families", "Products"], summary="Add a product to a family")
-def add_product_to_family(family_id: int, product_id: int, db: Session = Depends(database.get_db)):
+@router.post("/family/{family_id}/product/", tags=["Families", "Products"])
+async def add_product_to_family(family_id: int, product_id: int, db: Session = Depends(database.get_db)):
+    """
+    Add a product to a family.
+
+    Args:
+        family_id (int): The ID of the family to add the product to.
+        product_id (int): The ID of the product to add to the family.
+        db (Session): The database session.
+
+    Returns:
+        dict: A message indicating the success of the operation.
+
+    Raises:
+        HTTPException: If either the family or the product is not found.
+    """
     product_service = ProductManager(db)
     
     family = product_service.get_family(family_id)
@@ -83,16 +137,39 @@ def add_product_to_family(family_id: int, product_id: int, db: Session = Depends
     db.commit()
     return {"status": "success", "message": "Product added to family successfully"}
 
-@router.get("/family/{family_id}", tags=["Families"], summary="Get family details")
-def get_family(family_id: int, db: Session = Depends(database.get_db)):
+@router.get("/family/{family_id}", tags=["Families"])
+async def get_family(family_id: int, db: Session = Depends(database.get_db)):
+    """
+    Retrieve family details by ID.
+
+    Args:
+        family_id (int): The ID of the family to retrieve.
+        db (Session): The database session.
+
+    Returns:
+        dict: The family details.
+
+    Raises:
+        HTTPException: If the family is not found.
+    """
     product_service = ProductManager(db)
     family = product_service.get_family(family_id)
     if not family:
         raise HTTPException(status_code=404, detail="Family not found")
     return {"status": "success", "data": family}
 
-@router.get("/product/{product_id}/sales/last-year", tags=["Sales"], summary="Get last year's sales for a product")
-def get_product_sales_last_year(product_id: int, db: Session = Depends(database.get_db)):
+@router.get("/product/{product_id}/sales/last-year", tags=["Sales"])
+async def get_product_sales_last_year(product_id: int, db: Session = Depends(database.get_db)):
+    """
+    Get the total sales for a product in the last year.
+
+    Args:
+        product_id (int): The ID of the product to get sales for.
+        db (Session): The database session.
+
+    Returns:
+        dict: The total sales for the product in the last year.
+    """
     product_service = ProductManager(db)
     total_sales = product_service.get_product_sales_last_year(product_id)
     return {"status": "success", "total_sales": total_sales}
