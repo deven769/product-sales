@@ -26,8 +26,9 @@ This project is a FastAPI web server that handles product sales data for a store
 
 8. For running test cases
    ```bash
-   pytest
-
+   pytest app/tests/test_main.py
+   pytest app/tests/test_crud.py
+   pytest app/tests/test_sales_prediction.py
    ```
 
 ## Options

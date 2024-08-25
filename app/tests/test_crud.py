@@ -9,6 +9,8 @@ import pandas as pd
 import tempfile
 import os
 import io
+from unittest.mock import patch, mock_open
+
 
 # Test database URL
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
@@ -41,6 +43,20 @@ def test_read_csv_with_encoding(product_manager):
     assert df.iloc[0]['Family'] == 'Electronics'
 
     os.unlink(tmp_path)
+
+def test_read_csv_with_encoding_failure(product_manager):
+    with patch("pandas.read_csv", side_effect=Exception("Test exception")):
+        with pytest.raises(Exception) as excinfo:
+            product_manager.read_csv_with_encoding("non_existent_file.csv", ['utf-8'], [','])
+    
+    error_message = str(excinfo.value)
+    print(f"Actual error message: {error_message}")  # Add this line for debugging
+    
+    assert any(phrase in error_message for phrase in [
+        "Unable to read the file",
+        "provided encodings and delimiters",
+        "Test exception"
+    ]), f"Expected error message not found in: {error_message}"
 
 def test_load_data(product_manager, db):
     with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.csv') as tmp:
