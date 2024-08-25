@@ -139,7 +139,7 @@ class SalesPredictor:
             # Generate error metrics for additional insight
             report_df['quantity_error'] = report_df['actual_quantity'] - report_df['predicted_quantity']
             report_df['revenue_error'] = report_df['actual_revenue'] - report_df['predicted_revenue']
-            report_df.to_csv('prediction_report.csv', index=False)
+            report_df.to_csv('output/prediction_report.csv', index=False)
             return report_df
 
         except Exception as e:
